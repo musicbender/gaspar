@@ -1,0 +1,16 @@
+{
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules"
+  ],
+  "watch": [
+    "app/controllers/",
+    "app/models/",
+    "app/assets/",
+    "config/",
+    "db/"
+  ],
+  "restartable": "rs",
+  "ext": "rb yml",
+  "exec": "bundle exec rails server -b \"0.0.0.0\" -e development"
+}
