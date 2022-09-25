@@ -7,7 +7,7 @@ COPY ./Gemfile.lock .
 RUN bundle install
 COPY ./ .
 
-COPY entrypoint.sh ./bin/
+COPY ./scripts/entrypoint.sh ./bin/
 RUN chmod +x ./bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
