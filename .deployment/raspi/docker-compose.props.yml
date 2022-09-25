@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  db:
+    image: gcr.io/cloudsql-docker/gce-proxy:1.16
+    ports:
+      - 5432:5432
+    command:
+      - "/cloud_sql_proxy"
+      - "-dir=/cloudsql"
+      - "-instances=${GASPAR_CLOUDSQL_CONNECTION_NAME}"
+      - "-credential_file=/tmp/keys/extreme-braid-250106-3b56fa9812f3.json"
+    user: root
+    volumes:
+      - ${GASPAR_GCP_KEY_PATH}:/tmp/keys/extreme-braid-250106-3b56fa9812f3.json:ro
+      - cloudsql:/cloudsql
+  api:
+    image: ${GASPAR_IMAGE_URL}:${GASPAR_IMAGE_TAG}
+    depends_on:
+      - db
+    volumes:
+      - cloudsql:/cloudsql
+
+volumes:
+  cloudsql:

@@ -12,5 +12,5 @@
   ],
   "restartable": "rs",
   "ext": "rb yml",
-  "exec": "bundle exec rails server -b \"0.0.0.0\" -e development"
+  "exec": "./scripts/dev-server.sh"
 }
