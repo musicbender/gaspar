@@ -19,3 +19,7 @@ test:
 
 production:
   <<: *default
+  username: <%= ENV['GASPAR_DB_USERNAME'] %>
+  password: <%= ENV['GASPAR_DB_PASSWORD'] %>
+  host: <%= ENV['GASPAR_DB_HOST'] %>
+  port: <%= ENV['GASPAR_DB_PORT'] %>
