@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - name: Get the project version
         uses: avides/actions-project-version-check@v1.2.0
         id: project_version_check
@@ -31,17 +33,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
       - name: Build, tag, and push image to Amazon ECR
-        uses: uraimo/run-on-arch-action@v2
-        with:
-          arch: aarch64
-          distro: ubuntu16.04
-          githubToken: ${{ github.token }}
-          shell: /bin/sh
-          env: |
-            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-            ECR_REPOSITORY: patjacobs/gaspar
-            IMAGE_TAG: v${{ steps.project_version_check.outputs.version }}
-            LATEST_TAG: latest
-          run: |
-            docker build -f Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG .
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: patjacobs/gaspar
+          IMAGE_TAG: v${{ steps.project_version_check.outputs.version }}
+          LATEST_TAG: latest
+        run: |
+          docker buildx build --platform linux/arm64 -f Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
