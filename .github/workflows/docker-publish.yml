@@ -36,11 +36,12 @@ jobs:
           arch: aarch64
           distro: ubuntu16.04
           githubToken: ${{ github.token }}
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: patjacobs/gaspar
-          IMAGE_TAG: v${{ steps.project_version_check.outputs.version }}
-          LATEST_TAG: latest
-        run: |
-          docker build -f Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
+          shell: /bin/sh
+          env: |
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: patjacobs/gaspar
+            IMAGE_TAG: v${{ steps.project_version_check.outputs.version }}
+            LATEST_TAG: latest
+          run: |
+            docker build -f Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
