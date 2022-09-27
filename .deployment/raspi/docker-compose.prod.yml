@@ -2,20 +2,26 @@ version: "3"
 
 services:
   db:
-    image: gcr.io/cloudsql-docker/gce-proxy:1.16
+    image: arm64v8/ubuntu:16.04
     ports:
       - 5433:5432
+    platform: linux/arm64/v8
     command:
-      - "/cloud_sql_proxy"
-      - "-dir=/cloudsql"
-      - "-instances=${GASPAR_CLOUDSQL_CONNECTION_NAME}"
-      - "-credential_file=/tmp/keys/extreme-braid-250106-3b56fa9812f3.json"
-    user: root
+      - /bin/bash
+      - -c
+      - |
+        echo it is working
+        echo aiiieeee
+      # - |
+      #   wget "https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.0.0-preview.0/cloud-sql-proxy.linux.arm64" -O cloud-sql-proxy
+      #   chmod +x cloud-sql-proxy
+      #   /cloud_sql_proxy -dir=/cloudsql -instances=$${GASPAR_CLOUDSQL_CONNECTION_NAME} -credential_file=/tmp/keys/$${GASPAR_GCP_KEY_ID}.json
     volumes:
-      - ${GASPAR_GCP_KEY_PATH}:/tmp/keys/extreme-braid-250106-3b56fa9812f3.json:ro
+      - ${GASPAR_GCP_KEY_PATH}:/tmp/keys/$${GASPAR_GCP_KEY_ID}.json:ro
       - cloudsql:/cloudsql
   api:
     image: ${GASPAR_IMAGE_URL}:${GASPAR_IMAGE_TAG}
+    platform: linux/arm64/v8
     depends_on:
       - db
     volumes:
