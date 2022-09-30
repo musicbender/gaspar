@@ -39,5 +39,8 @@ jobs:
           IMAGE_TAG: v${{ steps.project_version_check.outputs.version }}
           LATEST_TAG: latest
         run: |
-          docker buildx build --platform linux/arm64 -f Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG .
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          docker buildx create --name multiarch --driver docker-container --use
+          docker buildx inspect --bootstrap
+          docker buildx build --no-cache --platform linux/arm64 -f Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$LATEST_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
