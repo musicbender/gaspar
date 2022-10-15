@@ -40,7 +40,8 @@ jobs:
           LATEST_TAG: latest
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker buildx create --name multiarch --driver docker-container --use
+          docker buildx create --name multiarch --driver docker-container --use 
+          docker buildx create --platform linux/arm64,linux/arm/v8
           docker buildx inspect --bootstrap
           docker buildx build \
           --no-cache \

@@ -1,29 +1,32 @@
-version: "3"
+version: "3.8"
 
 services:
   db:
-    image: arm64v8/ubuntu:16.04
+    build:
+      context: .
+      dockerfile: Dockerfile.db
     ports:
       - 5433:5432
     platform: linux/arm64/v8
     command:
       - /bin/bash
       - -c
-      - |
-        echo it is working
-        echo aiiieeee
-      # - |
-      #   wget "https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.0.0-preview.0/cloud-sql-proxy.linux.arm64" -O cloud-sql-proxy
-      #   chmod +x cloud-sql-proxy
-      #   /cloud_sql_proxy -dir=/cloudsql -instances=$${GASPAR_CLOUDSQL_CONNECTION_NAME} -credential_file=/tmp/keys/$${GASPAR_GCP_KEY_ID}.json
+      - | 
+        wget "https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.0.0-preview.0/cloud-sql-proxy.linux.arm64" -O cloud-sql-proxy
+        chmod +x cloud-sql-proxy
+        echo $GASPAR_CLOUDSQL_CONNECTION_NAME
+        echo /tmp/keys/${GASPAR_GCP_KEY_ID}.json
+        /cloud-sql-proxy -c /tmp/keys/${GASPAR_GCP_KEY_ID}.json --unix-socket /cloudsql ${GASPAR_CLOUDSQL_CONNECTION_NAME}
     volumes:
-      - ${GASPAR_GCP_KEY_PATH}:/tmp/keys/$${GASPAR_GCP_KEY_ID}.json:ro
+      - ${GASPAR_GCP_KEY_PATH}/${GASPAR_GCP_KEY_ID}.json:/tmp/keys/${GASPAR_GCP_KEY_ID}.json:ro
       - cloudsql:/cloudsql
   api:
     image: ${GASPAR_IMAGE_URL}:${GASPAR_IMAGE_TAG}
     platform: linux/arm64/v8
     depends_on:
       - db
+    ports:
+      - 3000:3000
     volumes:
       - cloudsql:/cloudsql
 
