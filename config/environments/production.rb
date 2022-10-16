@@ -45,7 +45,7 @@ Rails.application.configure do
   # information to avoid inadvertent exposure of personally identifiable information (PII).
   config.log_level = :info
 
-  config.secret_key_base = ENV["SECRET_KEY_BASE"]
+  config.secret_key_base = '<%= ENV["SECRET_KEY_BASE"] %>' || `secret123`
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
