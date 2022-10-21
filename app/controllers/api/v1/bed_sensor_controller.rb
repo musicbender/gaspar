@@ -4,11 +4,11 @@ class Api::V1::BedSensorController < ApplicationController
 
   def index
     bed_sensors = BedSensor.all
-    render json: { bed_sensor: bed_sensors }
+    render json: { bed_sensor: bed_sensors } 
   end
 
   def show 
-    render json: { bed_sensor: bed_sensor }
+    render json: { bed_sensor: bed_sensor } 
   end
  
   def update

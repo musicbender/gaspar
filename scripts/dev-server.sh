@@ -2,5 +2,5 @@
 
 kill -9 `cat tmp/pids/server.pid`
 echo "Gaspar ready!"
-source "banner.sh"
+source "./scripts/banner.sh"
 bundle exec rails server -b "0.0.0.0" -e development

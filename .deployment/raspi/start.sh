@@ -8,4 +8,4 @@ aws ecr get-login-password | docker login --username AWS --password-stdin ${GASP
 
 # run gaspar
 docker-compose -f docker-compose.prod.yml stop
-docker-compose -f docker-compose.prod.yml up --build -d --force-recreate --pull "always"
+docker-compose -f docker-compose.prod.yml up -d --build --force-recreate --pull "always"

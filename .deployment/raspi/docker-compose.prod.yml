@@ -16,10 +16,9 @@ services:
         chmod +x cloud-sql-proxy
         echo $GASPAR_CLOUDSQL_CONNECTION_NAME
         echo /tmp/keys/${GASPAR_GCP_KEY_ID}.json
-        /cloud-sql-proxy -c /tmp/keys/${GASPAR_GCP_KEY_ID}.json --unix-socket /cloudsql ${GASPAR_CLOUDSQL_CONNECTION_NAME}
+        /cloud-sql-proxy -c /tmp/keys/${GASPAR_GCP_KEY_ID}.json ${GASPAR_CLOUDSQL_CONNECTION_NAME}
     volumes:
       - ${GASPAR_GCP_KEY_PATH}/${GASPAR_GCP_KEY_ID}.json:/tmp/keys/${GASPAR_GCP_KEY_ID}.json:ro
-      - cloudsql:/cloudsql
   api:
     image: ${GASPAR_IMAGE_URL}:${GASPAR_IMAGE_TAG}
     platform: linux/arm64/v8
