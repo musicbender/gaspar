@@ -16,6 +16,6 @@ COPY ./ .
 
 ENTRYPOINT ["entrypoint.sh"]
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD ["rails", "s", "-e", "production"]

@@ -3,10 +3,10 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
   encoding: unicode
-  host: db
-  database: gaspar
-  username: gaspar
-  password: hJ6D9pAak45!Dw7
+  username: <%= ENV['GASPAR_DB_USERNAME'] %>
+  password: <%= ENV['GASPAR_DB_PASSWORD'] %>
+  host: <%= ENV['GASPAR_DB_HOST'] %>
+  port: <%= ENV['GASPAR_DB_PORT'] %>
 
 development:
   <<: *default
@@ -19,7 +19,3 @@ test:
 
 production:
   <<: *default
-  username: <%= ENV['GASPAR_DB_USERNAME'] %>
-  password: <%= ENV['GASPAR_DB_PASSWORD'] %>
-  host: <%= ENV['GASPAR_DB_HOST'] %>
-  port: <%= ENV['GASPAR_DB_PORT'] %>
