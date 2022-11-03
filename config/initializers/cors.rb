@@ -7,11 +7,11 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins Rails.application.credentials[Rails.env.to_sym][:allowed_origins_1]
+    origins 'https://patjacobs.com'
     resource '*', headers: :any, methods: [:get]
   end
   allow do
-    origins Rails.application.credentials[Rails.env.to_sym][:allowed_origins_2]
+    origins 'https://maker.ifttt.com'
     resource "/api/v1/ben_sensor", headers: :any, method: [:patch]
   end
 end
