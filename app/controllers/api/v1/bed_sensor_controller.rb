@@ -14,6 +14,7 @@ class Api::V1::BedSensorController < ApplicationController
   def update
     if bed_sensor
       bed_sensor.update(bed_sensor_update_params)
+
       render json: { bed_sensor: bed_sensor}
     else
       render json: { errors: bed_sensor.errors }, status: 500
@@ -43,8 +44,19 @@ class Api::V1::BedSensorController < ApplicationController
       @bed_sensor ||= BedSensor.find_by!(id: id)
     end
 
+    def other_bed_sensor(id)
+      @other_bed_sensor ||= BedSensor.find_by!(id: id)
+    end
+
     def id
       params.require(:id)
+    end
+
+    def request_webhook(is_active) 
+      other_id = id == 1 ? 2 : 1;
+      if is_active && other_bed_sensor(other_id).is_active
+        print 'Both are active!!!'
+      end
     end
 
     def record_not_found
