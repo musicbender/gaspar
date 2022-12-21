@@ -1,3 +1,3 @@
-# README
+# GASPAR
 
 My home server API for smart home automation and whatever.
