@@ -2,7 +2,9 @@ class Rack::Attack
   Rack::Attack.enabled = ENV['GASPAR_ENABLE_RACK_ATTACK'] || Rails.env.production?
   Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new 
 
-  throttle('req/ip', limit: 2, period: 1.minutes) do |req|
+  throttle_limit = ENV.fetch('GASPAR_THROTTLE_LIMIT') { 20 }
+
+  throttle('req/ip', limit: throttle_limit.to_i, period: 1.minutes) do |req|
     req.ip
   end
 
@@ -15,24 +17,28 @@ class Rack::Attack
   # bad_origins = ["foo.com", "bar.com"]
   bad_origins = ENV['GASPAR_BLOCKED_URLS'].split(/,\s*/) 
   bad_origins_regexp = Regexp.union(bad_origins) 
+
   blocklist("block referer spam") do |request|
-    request.referer =~ bad_origins_regexp
+    request.referer =~ bad_origins_regexp 
   end
 
   # Block these user agents 
   bad_uas = ENV['GASPAR_BLOCKED_UA'].split(',')
+
   Rack::Attack.blocklist('block bad UA logins') do |req|
     bad_uas.include?(req.user_agent)
   end
 
   # Block these IPs
   bad_ips = ENV['GASPAR_BLOCKED_IPS'].split(',') 
+
   Rack::Attack.blocklist "Block IPs from GASPAR_BLOCKED_IPS" do |req|
     bad_ips.include?(req.ip)
   end
 
   # logging
   LOGGER = Logger.new("log/rack-attack.log")
+
   ActiveSupport::Notifications.subscribe('rack.attack') do |_name, _start, _finish, _request_id, payload|
     req = payload[:request] 
     if [:throttle, :blacklist, :blocklist].include? req.env['rack.attack.match_type']
