@@ -1,43 +1,10 @@
 version: "3.8"
 
 services:
-  db:
-    build:
-      context: .
-      dockerfile: Dockerfile.db
-    ports:
-      - 5433:5432
-      - 9091:9090
-    expose:
-      - 5432
-    platform: linux/arm64/v8
-    command:
-      - /bin/bash
-      - -c
-      - | 
-        wget "https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.0.0-preview.0/cloud-sql-proxy.linux.arm64" -O cloud-sql-proxy
-        chmod +x cloud-sql-proxy
-        echo $GASPAR_CLOUDSQL_CONNECTION_NAME
-        echo /tmp/keys/${GASPAR_GCP_KEY_ID}.json
-        /cloud-sql-proxy -c /tmp/keys/${GASPAR_GCP_KEY_ID}.json --health-check --address 0.0.0.0 ${GASPAR_CLOUDSQL_CONNECTION_NAME}
-    volumes:
-      - ${GASPAR_GCP_KEY_PATH}/${GASPAR_GCP_KEY_ID}.json:/tmp/keys/${GASPAR_GCP_KEY_ID}.json:ro
-    healthcheck:
-      test: "curl -f localhost:9090/readiness"
-      interval: 5s
-      timeout: 5s
-      retries: 10
   api:
     image: ${GASPAR_IMAGE_URL}:${GASPAR_IMAGE_TAG}
     platform: linux/arm64/v8
-    depends_on:
-      - db
     ports:
       - ${PORT}:${PORT}
     env_file:
       - .env
-    volumes:
-      - cloudsql:/cloudsql
-
-volumes:
-  cloudsql:
