@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ~/apps/gaspar
+
 # set environment variables
 source ~/apps/gaspar/setenv.sh
 
