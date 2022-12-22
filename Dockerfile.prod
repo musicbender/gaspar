@@ -4,7 +4,7 @@ RUN mkdir /app
 WORKDIR /app
 
 RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends build-essential wget
+    apt-get install -y --no-install-recommends build-essential wget lsb-release
 
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
