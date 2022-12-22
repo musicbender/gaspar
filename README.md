@@ -1,3 +1,3 @@
 # GASPAR
 
-My local home server automation api for raspberry pi
+My home server API for smart home automation and whatever.
